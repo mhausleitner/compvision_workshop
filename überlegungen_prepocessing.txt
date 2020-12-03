@@ -1,3 +1,9 @@
 Threshold global blöd...du siehst nur den "hellsten" nicht alle - wenn treshold mit nachbarschaft
 
 ist punkt heller als seine nachbarschaft?
+
+bandpass-filter maybe? 
+
+bandpass or medianfilter
+
+bei lokalen histogrmm ausgleich sparst den hochpass.
