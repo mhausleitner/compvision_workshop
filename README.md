@@ -17,3 +17,5 @@ Slides and material for the course can be found on Moodle: https://moodle.jku.at
 * Matlab's Image Processing Toolbox
 * Matlab's Computer Vision Toolbox
 
+# YOLO Tutorial in Google Colab
+https://colab.research.google.com/drive/1lTGZsfMaGUpBG4inDIQwIJVW476ibXk_
