@@ -19,4 +19,5 @@ Slides and material for the course can be found on Moodle: https://moodle.jku.at
 
 # YOLO Tutorial in Google Colab
 https://github.com/theAIGuysCode/YOLOv4-Cloud-Tutorial
+
 https://www.youtube.com/watch?v=mmj3nxGT2YQ&feature=youtu.be
