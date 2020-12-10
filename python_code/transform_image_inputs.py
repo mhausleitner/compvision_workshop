@@ -103,11 +103,11 @@ fourth value is Y 1 und Y2
 
 
 def get_bounding_box(polygons):
-    dims = len(polygons)
     aab_xyz = np.zeros((2, 2))
     aab_xyz[0, :] = np.min(polygons, axis=0)
     aab_xyz[1, :] = np.max(polygons, axis=0)
     return aab_xyz, (aab_xyz[1, :] - aab_xyz[0, :])
+
 
 """
 Fist we calculate the bounding box for given coordinates, then we transform them into a format usable by yolo
@@ -115,14 +115,18 @@ Fist we calculate the bounding box for given coordinates, then we transform them
 
 
 def normalize_coords(polygons) -> string:
+    bb_with_range = shape_bb(polygons)
+    res = calculate_yolobb(bb_with_range[0])
+    return ' '.join([str(elem) for elem in res])
+
+
+def shape_bb(polygons):
     bb_with_range = get_bounding_box(polygons)
     min_val = np.minimum(max_height, bb_with_range[0][:, 0])  # min returns mimal entry
     bb_with_range[0][:, 0] = np.maximum(1, min_val)  # minimum compares by element(matrizes)
-
     min_val = np.minimum(max_width, bb_with_range[0][:, 1])
     bb_with_range[0][:, 1] = np.maximum(1, min_val)
-    res = calculate_yolobb(bb_with_range[0])
-    return ' '.join([str(elem) for elem in res])
+    return bb_with_range
 
 
 """
@@ -136,10 +140,15 @@ def calculate_yolobb(box):
     dw = 1. / max_height
     dh = 1. / max_width
 
-    x = box[0, 0] + box[1, 0] / 2.0
-    y = box[0, 1] + box[1, 1] / 2.0
-    w = box[1, 0] - box[0, 0]
-    h = box[1, 1] - box[0, 1]
+    v1 = box[0, 0]
+    v2 = box[1, 0]
+    v3 = box[0, 1]
+    v4 = box[1, 1]
+
+    x = (v1 + v2 -1) / 2.0
+    y = (v3 + v4 -1) / 2.0
+    w = v2 - v1 + 1
+    h = v4 - v3
 
     x = x * dw
     w = w * dw
