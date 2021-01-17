@@ -18,23 +18,20 @@ matIoUGTids = cell(length( results ),1);
 
 for i = 1:length( results )
     [ folder, name, ext] = fileparts( results(i).filename );
-    site = name(1:strfind(name, '_line')-1);
-    linenumber = str2double( name(strfind(name, '_line')+strlength('_line'):end) );
-        
-    json = readJSON( fullfile( 'data', site, '/Labels/', ['Label' num2str(linenumber) '.json'] ) );
-    labels = json.Labels; clear json;
-    if ~isempty(labels) && ~isempty({labels.poly})
-        [~, yoloBBs, ~] = saveLabels( {labels.poly}, imgsize, [] );
-        lblBBs = zeros( size(yoloBBs,1), 4 );
-        for ii = 1:size(yoloBBs,1)
-            bb = yoloToBB( imgsize, yoloBBs(ii,:) );
-            lblBBs(ii,:) = [bb(1),bb(3),bb(2)-bb(1),bb(4)-bb(3)];
-        end
-    else
-        lblBBs = zeros( 0, 4 );
+
+    yoloBBs = readtable(folder + "/" + name + ".txt", 'Delimiter', ' '); % Read test set one by one
+    yoloBBs = yoloBBs{:,:}; % Cast to matrix
+    if ~isempty(yoloBBs)
+        yoloBBs(:,1) = []; % Remove class, keep the BB
     end
-    matGTBBs{i} = lblBBs;
    
+    lblBBs = zeros( size(yoloBBs,1), 4 );
+    for ii = 1:size(yoloBBs,1)
+        bb = yoloToBB( imgsize, yoloBBs(ii,:) );
+        lblBBs(ii,:) = [bb(1),bb(3),bb(2)-bb(1),bb(4)-bb(3)];
+    end
+
+    matGTBBs{i} = lblBBs;
         
     if ~isempty( results(i).objects )
         % draw detected objects
@@ -78,3 +75,4 @@ end % for i
 
 matGT = table( matGTBBs, 'VariableNames', {'person'} );
 matDetections = table( matDectBBs, matDectConfs, 'VariableNames', {'bboxes', 'scores'} );
+fprintf("FINISHED PARSING RESULTS\n");

@@ -11,8 +11,8 @@ trainingsites = { 'F0', 'F1', 'F2', 'F3', 'F5', 'F6', 'F8', 'F9', 'F10', 'F11' }
 testsites = { 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8'};
 allsites = cat(2, trainingsites, testsites );
 
-% baseline results
-results = readJSON( './results/yolov4-tiny_integral_results.json' );
+fprintf("RESULTS:\n");
+results = readJSON('./result2.json');
 [ filenames, detections, gts, ious, gtids] = parseResults( results );
 
 averagePrecision = evaluateDetectionPrecision(detections,gts,iou_threshold)
